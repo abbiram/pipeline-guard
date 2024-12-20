@@ -58,12 +58,13 @@ def find_close_segments_and_intersections(powerline_coords, pipeline_coords, thr
                 min_dist = min(min_dist, dist)
 
             if min_dist * 100000 <= threshold: # Convert to meters
-                close_segments.append((segment_start, segment_end))
+                close_segments.append({
+                    "start": segment_start,
+                    "end": segment_end
+                })
                 break
 
-
     return close_segments, intersections
-
 
 # --- Visualization ---
 def visualize_results(powerline_coords, pipeline_coords, close_segments, intersections):
@@ -74,7 +75,9 @@ def visualize_results(powerline_coords, pipeline_coords, close_segments, interse
     pipeline_gdf = gpd.GeoDataFrame({'geometry': [LineString(pipeline_coords)]})
 
     # Create a GeoDataFrame for close segments
-    close_segments_gdf = gpd.GeoDataFrame({'geometry': [LineString(segment) for segment in close_segments]})
+    close_segments_gdf = gpd.GeoDataFrame({
+        'geometry': [LineString([segment["start"], segment["end"]]) for segment in close_segments]
+    })
 
     # Create a GeoDataFrame for intersection points
     intersection_points_gdf = gpd.GeoDataFrame({'geometry': [Point(point) for point in intersections]})
@@ -107,7 +110,9 @@ pipeline_coords = parse_coordinates_from_file(pipeline_filepath)
 
 if powerline_coords and pipeline_coords:
     close_segments, intersections = find_close_segments_and_intersections(powerline_coords, pipeline_coords)
-    print("Close Segments:", close_segments)
+    print("Close Segments:")
+    for segment in close_segments:
+        print(f"  Start: {segment['start']}, End: {segment['end']}")
     print("Intersection Points:", intersections)
 
     visualize_results(powerline_coords, pipeline_coords, close_segments, intersections) # Call visualization function
