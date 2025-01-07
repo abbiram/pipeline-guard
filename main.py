@@ -75,12 +75,10 @@ def find_close_segments_and_intersections(powerline_coords, pipeline_coords, thr
     return close_segments, intersections
 
 def print_coordinates(coords):
-    """Print coordinates in both decimal degrees and degree, minutes, seconds format."""
+    """Print coordinates in decimal degrees format."""
     for coord in coords:
         lat, lon = coord
-        lon_dms = decimal_degrees_to_dms(lon, False)
-        lat_dms = decimal_degrees_to_dms(lat, True)
-        print(f"{lat_dms} {lon_dms}")
+        print(f"({lat}, {lon})")
 
 def visualize_results(powerline_coords, pipeline_coords, close_segments, intersections):
     """Visualizes the powerline, pipeline, close segments, and intersections."""
@@ -115,8 +113,8 @@ def visualize_results(powerline_coords, pipeline_coords, close_segments, interse
 
 
 # --- Example usage with files (including visualization) ---
-powerline_filepath = "powerlines/Gates-Panoche-#1.csv"  # Or use your larger test case files
-pipeline_filepath = "pipelines/1218-01-Pipeline.csv"
+powerline_filepath = "powerlines/Los-Banos---Gates-#1.csv"  # Or use your larger test case files
+pipeline_filepath = "pipelines/300B-Pipeline.csv"
 
 powerline_coords = parse_coordinates_from_file(powerline_filepath)
 pipeline_coords = parse_coordinates_from_file(pipeline_filepath)
